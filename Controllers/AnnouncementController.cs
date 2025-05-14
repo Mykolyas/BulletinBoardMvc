@@ -1,6 +1,7 @@
 ﻿using BulletinBoardMvc.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace BulletinBoardMvc.Controllers
@@ -14,18 +15,40 @@ namespace BulletinBoardMvc.Controllers
             _httpClient = httpClient;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string category, string subcategory)
         {
-            var response = await _httpClient.GetAsync("https://localhost:7204/api/Announcements");
+            var query = $"https://localhost:7204/api/Announcements";
+
+            // додаємо параметри, якщо передані
+            if (!string.IsNullOrEmpty(category) || !string.IsNullOrEmpty(subcategory))
+            {
+                var queryParams = new List<string>();
+                if (!string.IsNullOrEmpty(category))
+                    queryParams.Add($"category={Uri.EscapeDataString(category)}");
+                if (!string.IsNullOrEmpty(subcategory))
+                    queryParams.Add($"subcategory={Uri.EscapeDataString(subcategory)}");
+
+                query += "?" + string.Join("&", queryParams);
+            }
+
+            var response = await _httpClient.GetAsync(query);
             if (response.IsSuccessStatusCode)
             {
                 var announcements = await response.Content.ReadAsAsync<List<Announcement>>();
+
+                // передаємо у ViewBag список категорій і підкатегорій
+                ViewBag.Categories = announcements.Select(a => a.Category).Distinct().OrderBy(c => c).ToList();
+                ViewBag.SubCategories = announcements.Select(a => a.SubCategory).Distinct().OrderBy(s => s).ToList();
+                ViewBag.SelectedCategory = category;
+                ViewBag.SelectedSubCategory = subcategory;
+
                 return View(announcements);
             }
 
             var errorText = await response.Content.ReadAsStringAsync();
             return Content($"❌ Помилка при отриманні оголошень. Статус: {response.StatusCode}\nПовідомлення: {errorText}");
         }
+
 
         public IActionResult Create()
         {
@@ -51,7 +74,7 @@ namespace BulletinBoardMvc.Controllers
             var response = await _httpClient.GetAsync($"https://localhost:7204/api/Announcements/{id}");
             if (response.IsSuccessStatusCode)
             {
-                var announcement = await response.Content.ReadAsAsync<Announcement>();
+                var announcement = await response.Content.ReadFromJsonAsync<Announcement>();
                 return View(announcement);
             }
 
