@@ -11,27 +11,73 @@
         <label for="Description">Опис</label>
         <textarea id="Description" name="Description" class="form-control" required>@Model.Description</textarea>
     </div>
+
+    <!-- Спадаюче меню для категорії -->
     <div class="form-group">
         <label for="Category">Категорія</label>
-        <input type="text" id="Category" name="Category" class="form-control" value="@Model.Category" required>
+        <select id="Category" name="Category" class="form-control" required>
+            <option value="Побутова техніка">Побутова техніка</option>
+            <option value="Комп'ютерна техніка">Комп'ютерна техніка</option>
+            <option value="Смартфони">Смартфони</option>
+            <option value="Інше">Інше</option>
+        </select>
     </div>
+
+    <!-- Спадаюче меню для підкатегорії -->
     <div class="form-group">
         <label for="SubCategory">Підкатегорія</label>
-        <input type="text" id="SubCategory" name="SubCategory" class="form-control" value="@Model.SubCategory" required>
+        <select id="SubCategory" name="SubCategory" class="form-control" required>
+            <!-- Підкатегорії будуть змінюватися залежно від вибору категорії -->
+        </select>
     </div>
+
+    <!-- Спадаюче меню для статусу -->
     <div class="form-group">
-        <label asp-for="Status">Статус</label>
-        @Html.DropDownListFor(model => model.Status, new SelectList(
-                 new List<object>
-        {
-        new { value = true, text = "Активне" },
-        new { value = false, text = "Неактивне" }
-        },
-                 "value",
-                 "text",
-                 Model.Status
-                 ), htmlAttributes: new { @class = "form-control" })
+        <label for="Status">Статус</label>
+        <select id="Status" name="Status" class="form-control" required>
+            <option value="true">Активне</option>
+            <option value="false">Неактивне</option>
+        </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Зберегти</button>
 </form>
+
+<script>
+    // JavaScript для оновлення підкатегорій на основі вибору категорії
+    document.getElementById("Category").addEventListener("change", function () {
+        var category = this.value;
+        var subCategorySelect = document.getElementById("SubCategory");
+
+        // Очищаємо попередні підкатегорії
+        subCategorySelect.innerHTML = "";
+
+        // В залежності від вибраної категорії додаємо відповідні підкатегорії
+        if (category === "Побутова техніка") {
+            subCategorySelect.innerHTML += `<option value="Холодильники" ${'@Model.SubCategory' === "Холодильники" ? "selected" : ""}>Холодильники</option>`;
+            subCategorySelect.innerHTML += `<option value="Пральні машини" ${'@Model.SubCategory' === "Пральні машини" ? "selected" : ""}>Пральні машини</option>`;
+            subCategorySelect.innerHTML += `<option value="Бойлери" ${'@Model.SubCategory' === "Бойлери" ? "selected" : ""}>Бойлери</option>`;
+            subCategorySelect.innerHTML += `<option value="Печі" ${'@Model.SubCategory' === "Печі" ? "selected" : ""}>Печі</option>`;
+            subCategorySelect.innerHTML += `<option value="Витяжки" ${'@Model.SubCategory' === "Витяжки" ? "selected" : ""}>Витяжки</option>`;
+            subCategorySelect.innerHTML += `<option value="Мікрохвильові печі" ${'@Model.SubCategory' === "Мікрохвильові печі" ? "selected" : ""}>Мікрохвильові печі</option>`;
+        } else if (category === "Комп'ютерна техніка") {
+            subCategorySelect.innerHTML += `<option value="ПК" ${'@Model.SubCategory' === "ПК" ? "selected" : ""}>ПК</option>`;
+            subCategorySelect.innerHTML += `<option value="Ноутбуки" ${'@Model.SubCategory' === "Ноутбуки" ? "selected" : ""}>Ноутбуки</option>`;
+            subCategorySelect.innerHTML += `<option value="Монітори" ${'@Model.SubCategory' === "Монітори" ? "selected" : ""}>Монітори</option>`;
+            subCategorySelect.innerHTML += `<option value="Принтери" ${'@Model.SubCategory' === "Принтери" ? "selected" : ""}>Принтери</option>`;
+            subCategorySelect.innerHTML += `<option value="Сканери" ${'@Model.SubCategory' === "Сканери" ? "selected" : ""}>Сканери</option>`;
+        } else if (category === "Смартфони") {
+            subCategorySelect.innerHTML += `<option value="Android смартфони" ${'@Model.SubCategory' === "Android смартфони" ? "selected" : ""}>Android смартфони</option>`;
+            subCategorySelect.innerHTML += `<option value="iOS/Apple смартфони" ${'@Model.SubCategory' === "iOS/Apple смартфони" ? "selected" : ""}>iOS/Apple смартфони</option>`;
+        } else if (category === "Інше") {
+            subCategorySelect.innerHTML += `<option value="Одяг" ${'@Model.SubCategory' === "Одяг" ? "selected" : ""}>Одяг</option>`;
+            subCategorySelect.innerHTML += `<option value="Взуття" ${'@Model.SubCategory' === "Взуття" ? "selected" : ""}>Взуття</option>`;
+            subCategorySelect.innerHTML += `<option value="Аксесуари" ${'@Model.SubCategory' === "Аксесуари" ? "selected" : ""}>Аксесуари</option>`;
+            subCategorySelect.innerHTML += `<option value="Спортивне обладнання" ${'@Model.SubCategory' === "Спортивне обладнання" ? "selected" : ""}>Спортивне обладнання</option>`;
+            subCategorySelect.innerHTML += `<option value="Іграшки" ${'@Model.SubCategory' === "Іграшки" ? "selected" : ""}>Іграшки</option>`;
+        }
+    });
+
+    // ініціалізація підкатегорій при початковому завантаженні сторінки
+    document.getElementById("Category").dispatchEvent(new Event("change"));
+</script>

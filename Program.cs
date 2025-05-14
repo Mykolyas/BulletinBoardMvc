@@ -1,3 +1,6 @@
+Ôªøusing Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
+
 namespace BulletinBoardMvc
 {
     public class Program
@@ -8,14 +11,26 @@ namespace BulletinBoardMvc
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddHttpClient(); // <== ƒŒƒ¿… ÷≈, ˇÍ˘Ó ˘Â ÌÂ ‰Ó‰‡‚
+            builder.Services.AddHttpClient();
+
+            // üü° –î–û–î–ê–ô –¶–ï ‚Äî —Ä–µ—î—Å—Ç—Ä–∞—Ü—ñ—è –∞—É—Ç–µ–Ω—Ç–∏—Ñ—ñ–∫–∞—Ü—ñ—ó
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogle(options =>
+            {
+                options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+                options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+            });
 
             var app = builder.Build();
 
-            // === ÷≈ Ã¿™ ¡”“» ƒŒ ”—‹Œ√Œ ≤ÕÿŒ√Œ ===
             if (app.Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage(); // œÓÍ‡ÊÂÏÓ ÔÓ‚ÌÛ ÔÓÏËÎÍÛ
+                app.UseDeveloperExceptionPage();
             }
             else
             {
@@ -28,6 +43,9 @@ namespace BulletinBoardMvc
 
             app.UseRouting();
 
+            // üü¢ –î–û–î–ê–ô –¶–ï ‚Äî middleware –¥–ª—è –∞—É—Ç–µ–Ω—Ç–∏—Ñ—ñ–∫–∞—Ü—ñ—ó
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllerRoute(
@@ -35,7 +53,6 @@ namespace BulletinBoardMvc
                 pattern: "{controller=Announcement}/{action=Index}/{id?}");
 
             app.Run();
-
         }
     }
 }
