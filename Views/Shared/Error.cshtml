@@ -1,0 +1,24 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1>Помилка</h1>
+
+@if (Model != null)
+{
+    <p>RequestId: @Model.RequestId</p>
+}
+
+@if (Context != null && Context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>() is var exceptionFeature && exceptionFeature != null)
+{
+    <h2>Повідомлення про помилку:</h2>
+    <pre>@exceptionFeature.Error.Message</pre>
+
+    <h2>Стек трейс:</h2>
+    <pre>@exceptionFeature.Error.StackTrace</pre>
+}
+else
+{
+    <p>Немає інформації про помилку</p>
+}

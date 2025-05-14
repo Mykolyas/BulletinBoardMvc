@@ -1,0 +1,83 @@
+﻿@model BulletinBoardMvc.Models.Announcement
+
+<h2>Додати нове оголошення</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label for="Title">Назва</label>
+        <input type="text" id="Title" name="Title" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="Description">Опис</label>
+        <textarea id="Description" name="Description" class="form-control" required></textarea>
+    </div>
+
+    <!-- Спадаюче меню для категорії -->
+    <div class="form-group">
+        <label for="Category">Категорія</label>
+        <select id="Category" name="Category" class="form-control" required>
+            <option value="Побутова техніка">Побутова техніка</option>
+            <option value="Комп'ютерна техніка">Комп'ютерна техніка</option>
+            <option value="Смартфони">Смартфони</option>
+            <option value="Інше">Інше</option>
+        </select>
+    </div>
+
+    <!-- Спадаюче меню для підкатегорії -->
+    <div class="form-group">
+        <label for="SubCategory">Підкатегорія</label>
+        <select id="SubCategory" name="SubCategory" class="form-control" required>
+            <!-- Підкатегорії будуть змінюватися залежно від вибору категорії -->
+        </select>
+    </div>
+
+    <!-- Спадаюче меню для статусу -->
+    <div class="form-group">
+        <label for="Status">Статус</label>
+        <select id="Status" name="Status" class="form-control" required>
+            <option value="true">Активне</option>
+            <option value="false">Неактивне</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Додати</button>
+</form>
+
+<script>
+    // JavaScript для оновлення підкатегорій на основі вибору категорії
+    document.getElementById("Category").addEventListener("change", function () {
+        var category = this.value;
+        var subCategorySelect = document.getElementById("SubCategory");
+
+        // Очищаємо попередні підкатегорії
+        subCategorySelect.innerHTML = "";
+
+        // В залежності від вибраної категорії додаємо відповідні підкатегорії
+        if (category === "Побутова техніка") {
+            subCategorySelect.innerHTML += `<option value="Холодильники">Холодильники</option>`;
+            subCategorySelect.innerHTML += `<option value="Пральні машини">Пральні машини</option>`;
+            subCategorySelect.innerHTML += `<option value="Бойлери">Бойлери</option>`;
+            subCategorySelect.innerHTML += `<option value="Печі">Печі</option>`;
+            subCategorySelect.innerHTML += `<option value="Витяжки">Витяжки</option>`;
+            subCategorySelect.innerHTML += `<option value="Мікрохвильові печі">Мікрохвильові печі</option>`;
+        } else if (category === "Комп'ютерна техніка") {
+            subCategorySelect.innerHTML += `<option value="ПК">ПК</option>`;
+            subCategorySelect.innerHTML += `<option value="Ноутбуки">Ноутбуки</option>`;
+            subCategorySelect.innerHTML += `<option value="Монітори">Монітори</option>`;
+            subCategorySelect.innerHTML += `<option value="Принтери">Принтери</option>`;
+            subCategorySelect.innerHTML += `<option value="Сканери">Сканери</option>`;
+        } else if (category === "Смартфони") {
+            subCategorySelect.innerHTML += `<option value="Android смартфони">Android смартфони</option>`;
+            subCategorySelect.innerHTML += `<option value="iOS/Apple смартфони">iOS/Apple смартфони</option>`;
+        } else if (category === "Інше") {
+            subCategorySelect.innerHTML += `<option value="Одяг">Одяг</option>`;
+            subCategorySelect.innerHTML += `<option value="Взуття">Взуття</option>`;
+            subCategorySelect.innerHTML += `<option value="Аксесуари">Аксесуари</option>`;
+            subCategorySelect.innerHTML += `<option value="Спортивне обладнання">Спортивне обладнання</option>`;
+            subCategorySelect.innerHTML += `<option value="Іграшки">Іграшки</option>`;
+        }
+    });
+
+    // ініціалізація підкатегорій при початковому завантаженні сторінки
+    document.getElementById("Category").dispatchEvent(new Event("change"));
+</script>

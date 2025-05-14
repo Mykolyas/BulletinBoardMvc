@@ -1,0 +1,37 @@
+﻿@model BulletinBoardMvc.Models.Announcement
+
+<h2>Редагувати оголошення</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label for="Title">Назва</label>
+        <input type="text" id="Title" name="Title" class="form-control" value="@Model.Title" required>
+    </div>
+    <div class="form-group">
+        <label for="Description">Опис</label>
+        <textarea id="Description" name="Description" class="form-control" required>@Model.Description</textarea>
+    </div>
+    <div class="form-group">
+        <label for="Category">Категорія</label>
+        <input type="text" id="Category" name="Category" class="form-control" value="@Model.Category" required>
+    </div>
+    <div class="form-group">
+        <label for="SubCategory">Підкатегорія</label>
+        <input type="text" id="SubCategory" name="SubCategory" class="form-control" value="@Model.SubCategory" required>
+    </div>
+    <div class="form-group">
+        <label asp-for="Status">Статус</label>
+        @Html.DropDownListFor(model => model.Status, new SelectList(
+                 new List<object>
+        {
+        new { value = true, text = "Активне" },
+        new { value = false, text = "Неактивне" }
+        },
+                 "value",
+                 "text",
+                 Model.Status
+                 ), htmlAttributes: new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Зберегти</button>
+</form>

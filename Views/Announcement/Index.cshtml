@@ -1,0 +1,36 @@
+﻿@model List<BulletinBoardMvc.Models.Announcement>
+
+<h2>Список оголошень</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Категорія</th>
+            <th>Підкатегорія</th>
+            <th>Статус</th>
+            <th>Дата</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var announcement in Model)
+        {
+            <tr>
+                <td>@announcement.Title</td>
+                <td>@announcement.Description</td>
+                <td>@announcement.Category</td>
+                <td>@announcement.SubCategory</td>
+                <td>@(announcement.Status ? "Активне" : "Неактивне")</td>
+                <td>@announcement.CreatedDate</td>
+                <td>
+                    <a href="@Url.Action("Edit", new { id = announcement.Id })">Редагувати</a> |
+                    <a href="@Url.Action("Delete", new { id = announcement.Id })" onclick="return confirm('Ви впевнені, що хочете видалити?')">Видалити</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Create")">Додати нове оголошення</a>
