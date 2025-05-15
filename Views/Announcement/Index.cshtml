@@ -8,72 +8,108 @@
     var selectedSubCategory = ViewBag.SelectedSubCategory as string;
 }
 
-<h1>Список оголошень</h1>
+<style>
+    body {
+        background-color: #f3f4f6;
+    }
+</style>
 
-<a href="@Url.Action("Create")" class="btn btn-success mb-3">➕ Створити нове оголошення</a>
+<div class="bg-light p-4 rounded shadow-sm mb-4 text-center">
+    <h4 class="mb-3">📝 Маєш щось цікаве? Додай своє оголошення</h4>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a href="@Url.Action("Create")" class="btn btn-success mb-3">➕ Створити нове оголошення</a>
+    }
+    
+</div>
 
-<form method="get" class="mb-4">
-    <div class="form-group">
-        <label for="category">Категорія:</label>
-        <select name="category" id="category" class="form-control">
-            <option value="">-- Усі категорії --</option>
-            @foreach (var cat in categories)
-            {
-                <option value="@cat" selected="@(cat == selectedCategory ? "selected" : null)">@cat</option>
-            }
-        </select>
+<form method="get" class="mb-5">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-5">
+            <label for="category" class="form-label">Категорія</label>
+            <select name="category" id="category" class="form-select">
+                <option value="">-- Усі категорії --</option>
+                @foreach (var cat in categories)
+                {
+                    <option value="@cat" selected="@(cat == selectedCategory ? "selected" : null)">@cat</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-5">
+            <label for="subcategory" class="form-label">Підкатегорія</label>
+            <select name="subcategory" id="subcategory" class="form-select">
+                <option value="">-- Усі підкатегорії --</option>
+                @foreach (var sub in subcategories)
+                {
+                    <option value="@sub" selected="@(sub == selectedSubCategory ? "selected" : null)">@sub</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-primary">🔍 Застосувати</button>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label for="subcategory">Підкатегорія:</label>
-        <select name="subcategory" id="subcategory" class="form-control">
-            <option value="">-- Усі підкатегорії --</option>
-            @foreach (var sub in subcategories)
-            {
-                <option value="@sub" selected="@(sub == selectedSubCategory ? "selected" : null)">@sub</option>
-            }
-        </select>
+    <div class="mt-2 text-end">
+        <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm">Очистити фільтр</a>
     </div>
-
-    <button type="submit" class="btn btn-primary mt-2">🔍 Застосувати фільтр</button>
-    <a href="@Url.Action("Index")" class="btn btn-secondary mt-2">❌ Очистити</a>
 </form>
+
 
 
 @if (Model.Count == 0)
 {
-    <p>🔎 Оголошення не знайдено.</p>
+    <p class="text-muted">🔎 Оголошення не знайдено.</p>
 }
 else
 {
-    <table class="table table-bordered">
-        <thead class="thead-light">
-            <tr>
-                <th>Назва</th>
-                <th>Опис</th>
-                <th>Категорія</th>
-                <th>Підкатегорія</th>
-                <th>Статус</th>
-                <th>Дата створення</th>
-                <th>Дії</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var a in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle shadow-sm">
+            <thead class="table-light text-center">
                 <tr>
-                    <td>@a.Title</td>
-                    <td>@a.Description</td>
-                    <td>@a.Category</td>
-                    <td>@a.SubCategory</td>
-                    <td>@(a.Status ? "✅ Активне" : "❌ Неактивне")</td>
-                    <td>@a.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>
-                        <a href="@Url.Action("Edit", new { id = a.Id })" class="btn btn-sm btn-warning">✏️ Редагувати</a>
-                        <a href="@Url.Action("Delete", new { id = a.Id })" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити це оголошення?');">🗑️ Видалити</a>
-                    </td>
+                    <th>Назва</th>
+                    <th style="min-width: 150px;">Опис</th>
+                    <th>Категорія</th>
+                    <th>Підкатегорія</th>
+                    <th>Статус</th>
+                    <th>Дата створення</th>
+                    <th>Дії</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var a in Model)
+                {
+                    <tr>
+                        <td class="fw-semibold">@a.Title</td>
+                        <td style="max-width: 300px;">
+                            <div class="text-truncate" title="@a.Description">@a.Description</div>
+                        </td>
+                        <td>@a.Category</td>
+                        <td>@a.SubCategory</td>
+                        <td class="text-center">
+                            @if (a.Status)
+                            {
+                                <span class="badge bg-success">Активне</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Неактивне</span>
+                            }
+                        </td>
+                        <td>@a.CreatedDate.ToString("yyyy-MM-dd HH:mm")</td>
+                        <td>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                            <div class="d-flex gap-2 flex-wrap">
+                                <a href="@Url.Action("Edit", new { id = a.Id })" class="btn btn-sm btn-warning">✏️ Редагувати</a>
+                                <a href="@Url.Action("Delete", new { id = a.Id })" class="btn btn-sm btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити це оголошення?');">🗑️ Видалити</a>
+                            </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }

@@ -16,6 +16,7 @@
     <div class="form-group">
         <label for="Category">Категорія</label>
         <select id="Category" name="Category" class="form-control" required>
+            <option value="">-- Змініть категорію --</option>
             <option value="Побутова техніка">Побутова техніка</option>
             <option value="Комп'ютерна техніка">Комп'ютерна техніка</option>
             <option value="Смартфони">Смартфони</option>
@@ -27,7 +28,7 @@
     <div class="form-group">
         <label for="SubCategory">Підкатегорія</label>
         <select id="SubCategory" name="SubCategory" class="form-control" required>
-            <!-- Підкатегорії будуть змінюватися залежно від вибору категорії -->
+            <option value="">-- Змініть підкатегорію --</option>
         </select>
     </div>
 
@@ -44,15 +45,12 @@
 </form>
 
 <script>
-    // JavaScript для оновлення підкатегорій на основі вибору категорії
     document.getElementById("Category").addEventListener("change", function () {
         var category = this.value;
         var subCategorySelect = document.getElementById("SubCategory");
 
-        // Очищаємо попередні підкатегорії
         subCategorySelect.innerHTML = "";
 
-        // В залежності від вибраної категорії додаємо відповідні підкатегорії
         if (category === "Побутова техніка") {
             subCategorySelect.innerHTML += `<option value="Холодильники" ${'@Model.SubCategory' === "Холодильники" ? "selected" : ""}>Холодильники</option>`;
             subCategorySelect.innerHTML += `<option value="Пральні машини" ${'@Model.SubCategory' === "Пральні машини" ? "selected" : ""}>Пральні машини</option>`;
@@ -78,6 +76,5 @@
         }
     });
 
-    // ініціалізація підкатегорій при початковому завантаженні сторінки
     document.getElementById("Category").dispatchEvent(new Event("change"));
 </script>

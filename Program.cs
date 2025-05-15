@@ -9,11 +9,9 @@ namespace BulletinBoardMvc
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpClient();
 
-            // 🟡 ДОДАЙ ЦЕ — реєстрація аутентифікації
             builder.Services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -43,9 +41,7 @@ namespace BulletinBoardMvc
 
             app.UseRouting();
 
-            // 🟢 ДОДАЙ ЦЕ — middleware для аутентифікації
             app.UseAuthentication();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(

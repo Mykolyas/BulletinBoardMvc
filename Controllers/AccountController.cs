@@ -22,8 +22,6 @@ namespace BulletinBoardMvc.Controllers
             if (!result.Succeeded)
                 return RedirectToAction("Error", "Home");
 
-            // Ти можеш зберігати claims або щось інше, якщо треба
-
             return LocalRedirect(returnUrl);
         }
 
